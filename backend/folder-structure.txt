@@ -1,0 +1,11 @@
+/backend
+├── app/
+│   ├── main.py           # Entry point for FastAPI
+│   ├── db.py             # Database connection
+│   ├── models.py         # Pydantic models
+│   ├── routers/          # Contains your route files
+│   │   ├── __init__.py   # Makes the directory a module
+│   │   └── auctions.py   # Auction-related routes
+│   └── services/         # (Optional) Business logic
+├── requirements.txt      # Dependencies
+└── .env                  # Environment variables

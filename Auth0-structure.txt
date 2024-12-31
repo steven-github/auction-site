@@ -1,0 +1,9 @@
+{
+  "sub": "google-oauth2|100786993613078818868",
+  "given_name": "Steven Sanchez",
+  "family_name": "Marin",
+  "nickname": "stvn20",
+  "name": "Steven Sanchez Marin",
+  "picture": "https://lh3.googleusercontent.com/a/ACg8ocJTJShusRlc9wCE_46YcmtXlHF7eT_HBosbm0G8c1GtOIwfnVA8Ww=s96-c",
+  "updated_at": "2024-12-31T02:34:51.671Z"
+}

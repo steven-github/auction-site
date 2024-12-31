@@ -1,21 +1,55 @@
+/* Import Tailwind's base, components, and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Custom global styles */
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif; /* Custom font */
+    background-color: #f9fafb; /* Light background */
+    color: #333; /* Dark text for readability */
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+a {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit text color */
+}
+
+button {
+    cursor: pointer; /* Show pointer cursor on buttons */
+    font-family: inherit; /* Inherit font family */
+}
+
+ul {
+    list-style: none; /* Remove bullet points from lists */
+    padding: 0;
+    margin: 0;
+}
+
+img {
+    max-width: 100%; /* Ensure images are responsive */
+    height: auto;
+}
+
+input,
+textarea {
+    font-family: inherit; /* Inherit font family for form elements */
+}
+
+* {
+    box-sizing: border-box; /* Ensure consistent box-sizing across elements */
+}
+
+:root {
+    /* CSS variables for consistent theming */
+    --primary-color: #3b82f6; /* Tailwind blue-500 */
+    --secondary-color: #10b981; /* Tailwind green-500 */
+    --danger-color: #ef4444; /* Tailwind red-500 */
+    --font-size-base: 1rem; /* Base font size */
+    --font-size-lg: 1.125rem; /* Large font size */
+    --font-size-sm: 0.875rem; /* Small font size */
 }

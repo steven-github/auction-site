@@ -1,0 +1,58 @@
+/frontend
+├── /components            # Reusable UI components
+│   ├── /auth              # Components related to authentication (login/logout)
+│   │   ├── LoginButton.tsx
+│   │   ├── LogoutButton.tsx
+│   │   └── AuthProvider.tsx
+│   ├── /auctions          # Components related to auctions
+│   │   ├── AuctionCard.tsx
+│   │   ├── AuctionList.tsx
+│   │   └── BidForm.tsx
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   └── Layout.tsx         # General layout wrapper
+│
+├── /hooks                 # Custom React hooks
+│   ├── useAuth.ts         # Auth0 hook for authentication
+│   ├── useWebSocket.ts    # WebSocket hook for real-time bidding
+│   └── useAuctions.ts     # Hook for fetching auction data
+│
+├── /pages                 # Next.js pages
+│   ├── api/               # API routes (if needed)
+│   │   ├── auth.ts        # Auth0 integration APIs
+│   │   └── auctions.ts    # APIs for fetching auctions (proxy for backend)
+│   ├── /auctions          # Auction-related pages
+│   │   ├── [id].tsx       # Auction detail page
+│   │   └── index.tsx      # Auction list page
+│   ├── _app.tsx           # Custom App component (global setup)
+│   ├── _document.tsx      # Custom Document component (SEO, etc.)
+│   ├── index.tsx          # Home page
+│   └── dashboard.tsx      # User dashboard
+│
+├── /public                # Static assets (images, icons, etc.)
+│   ├── /images            # Images
+│   │   ├── logo.png
+│   │   └── default-avatar.png
+│   └── favicon.ico
+│
+├── /styles                # Tailwind CSS and global styles
+│   ├── globals.css        # Global styles
+│   ├── tailwind.css       # Tailwind customizations
+│   └── variables.css      # Optional CSS variables
+│
+├── /utils                 # Utility functions
+│   ├── api.ts             # Axios or Fetch configuration for backend API
+│   ├── constants.ts       # App constants (e.g., API base URL)
+│   ├── websocket.ts       # WebSocket utility
+│   └── formatters.ts      # Helper functions (e.g., format currency)
+│
+├── /contexts              # React context providers
+│   ├── AuctionContext.tsx # Auction-related context
+│   └── UserContext.tsx    # User-related context
+│
+├── .env.local             # Environment variables for local development
+├── next.config.js         # Next.js configuration file
+├── tailwind.config.js     # Tailwind CSS configuration file
+├── postcss.config.js      # PostCSS configuration file
+├── package.json           # NPM dependencies and scripts
+└── tsconfig.json          # TypeScript configuration
