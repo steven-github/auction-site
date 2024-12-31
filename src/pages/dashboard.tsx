@@ -1,26 +1,26 @@
 import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Dashboard: React.FC = () => {
-    const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
+    const { user, error, isLoading } = useUser();
 
-    if (!isAuthenticated) {
+    if (isLoading) return <div>Loading...</div>;
+
+    if (error) return <div>{error.message}</div>;
+
+    if (!user) {
         return (
-            <div>
-                <h1>Access Denied</h1>
-                <p>You need to log in to access this page.</p>
-                <button onClick={() => loginWithRedirect()} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
-                    Log In
-                </button>
+            <div className='flex flex-col items-center justify-center h-100'>
+                <h1 className='text-2xl font-bold mb-4'>Access Denied</h1>
+                <p className='text-lg'>You need to log in to access this page.</p>
             </div>
         );
     }
 
     return (
-        <div>
-            <h1>Welcome, {user?.name}!</h1>
-            <p>Email: {user?.email}</p>
-            <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Log Out</button>
+        <div className='flex flex-col items-center justify-center h-100'>
+            <h1 className='text-2xl font-bold mb-4'>Welcome, {user?.name}!</h1>
+            <p className='text-lg'>Email: {user?.email}</p>
         </div>
     );
 };

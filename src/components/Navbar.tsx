@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 
+import Image from "next/image";
 import LoginButton from "./auth/LoginButton";
 import LogoutButton from "./auth/LogoutButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
     const { isAuthenticated } = useAuth0();
 
     const { user, error, isLoading } = useUser();
@@ -14,12 +15,13 @@ const Navbar: React.FC = () => {
     console.log("isLoading:", isLoading);
     console.log("isAuthenticated:", isAuthenticated);
     console.log("user:", user);
+    console.log("error:", error);
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (!isLoading) {
             console.log("Authenticated user:", user);
         }
-    }, [isAuthenticated, user]);
+    }, [isLoading, user]);
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -32,8 +34,16 @@ const Navbar: React.FC = () => {
                 <div className='flex items-center space-x-4'>
                     {user ? (
                         <>
-                            <p>Welcome, {user?.name}</p>
-                            <LogoutButton />
+                            <div className='flex items-center space-x-3'>
+                                <Image
+                                    src={user.picture ? user.picture : "https://via.placeholder.com/150"}
+                                    alt={user.name ? user.name : "Profile Picture"}
+                                    width={40}
+                                    height={40}
+                                    className='rounded-full'
+                                />
+                                <LogoutButton />
+                            </div>
                         </>
                     ) : (
                         <>
