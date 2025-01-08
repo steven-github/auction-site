@@ -1,18 +1,3 @@
-Virtual environments isolate your Python project and prevent conflicts with the system environment. This is the recommended approach.
-	1.	Create a Virtual Environment:
-        python3 -m venv venv
-
-    2.	Activate the Virtual Environment:
-        source venv/bin/activate
-
-    3.	Install Packages Inside the Virtual Environment:
-        pip install fastapi uvicorn motor pymongo
-
-    4.	Deactivate the Virtual Environment When Done:
-        deactivate
-
-------------------
-
 1. Add a connection IP address
 Your current IP address (45.239.64.119) has been added to enable local connectivity. Only an IP address you add to your Access List will be able to connect to your project's clusters. Add more later in Network Access.
 
@@ -43,11 +28,3 @@ mongodb+srv://stvn20:fEtcVVCQF3LpGumM@cluster0.hklgm.mongodb.net/
 
 The password for stvn20 is included in the connection string for your first time setup. This password will not be available again after exiting this connect flow.
 4. Click “Create New Playground” in MongoDB for VS Code to get started.
-
-------------------
-
-Step 6: Test the API
-
-Run the FastAPI application and test the endpoints.
-	1.	Start the Server:
-        uvicorn app.main:app --reload

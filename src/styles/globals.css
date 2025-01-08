@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Flowbite styles */
+@import "flowbite";
+
 /* Custom global styles */
 html,
 body {

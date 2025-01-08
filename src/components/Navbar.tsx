@@ -1,25 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import LoginButton from "./auth/LoginButton";
-import LogoutButton from "./auth/LogoutButton";
-import { useAuth0 } from "@auth0/auth0-react";
+import Link from "next/link";
+import axios from "axios";
+import { sign } from "crypto";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Navbar = () => {
-    const { isAuthenticated } = useAuth0();
-
     const { user, error, isLoading } = useUser();
-
-    // Debugging logs
-    console.log("isLoading:", isLoading);
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user:", user);
-    console.log("error:", error);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
+        const saveUserToDB = async () => {
+            try {
+                const response = await axios.post("/api/saveUser", user);
+
+                if (response.status === 200 && response.data.user) {
+                    console.log("User saved to DB:", response.data.user);
+                    localStorage.setItem("userId", response.data.user._id);
+                    localStorage.setItem("userName", response.data.user.name);
+                }
+            } catch (error: any) {
+                console.error("Error saving user:", error.response?.data || error.message);
+                localStorage.removeItem("userId");
+            }
+        };
+        // Dynamically import Flowbite for interactive components
+        import("flowbite");
         if (!isLoading) {
-            console.log("Authenticated user:", user);
+            // console.log("Authenticated user:", user);
+            saveUserToDB();
         }
     }, [isLoading, user]);
 
@@ -28,31 +39,173 @@ const Navbar = () => {
     }
 
     return (
-        <nav className='bg-gray-800 text-white py-4'>
-            <div className='container mx-auto flex justify-between items-center'>
-                <h1 className='text-xl font-bold'>AuctionSite</h1>
-                <div className='flex items-center space-x-4'>
-                    {user ? (
-                        <>
-                            <div className='flex items-center space-x-3'>
-                                <Image
-                                    src={user.picture ? user.picture : "https://via.placeholder.com/150"}
-                                    alt={user.name ? user.name : "Profile Picture"}
-                                    width={40}
-                                    height={40}
-                                    className='rounded-full'
-                                />
-                                <LogoutButton />
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <LoginButton />
-                        </>
-                    )}
+        <>
+            <nav className='bg-gray-800 text-white'>
+                <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+                    <div className='flex justify-between items-center h-16'>
+                        <div className='flex items-center'>
+                            <Link href='/' className=' text-xl font-bold'>
+                                AuctionSite
+                            </Link>
+                        </div>
+                        <div className='hidden md:flex space-x-4'>
+                            {user ? (
+                                <>
+                                    <div className='relative'>
+                                        <button
+                                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                            className='hover:bg-gray-700 px-3 py-2 rounded-md flex items-center space-x-3'
+                                        >
+                                            <Image
+                                                src={user.picture ? user.picture : "https://via.placeholder.com/150"}
+                                                alt={user.name ? user.name : "Profile Picture"}
+                                                width={40}
+                                                height={40}
+                                                className='rounded-full'
+                                            />
+                                            <svg
+                                                className='w-2.5 h-2.5 ms-3'
+                                                aria-hidden='true'
+                                                xmlns='http://www.w3.org/2000/svg'
+                                                fill='none'
+                                                viewBox='0 0 10 6'
+                                            >
+                                                <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='m1 1 4 4 4-4' />
+                                            </svg>
+                                        </button>
+                                        {isDropdownOpen && (
+                                            <div className='absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-10 divide-y divide-gray-100  dark:bg-gray-700 dark:divide-gray-600'>
+                                                <div className='px-4 py-3 text-sm text-gray-900 dark:text-white'>
+                                                    <div>{user.name}</div>
+                                                    <div className='font-medium truncate'>{user.email}</div>
+                                                </div>
+                                                <ul className='py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownInformationButton'>
+                                                    <li>
+                                                        <Link
+                                                            href='/dashboard'
+                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                        >
+                                                            Dashboard
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            href='#'
+                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                        >
+                                                            Settings
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            href='/auctions'
+                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                        >
+                                                            Auctions
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            href='/profile'
+                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                        >
+                                                            Profile
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                                <div className='py-2'>
+                                                    <Link
+                                                        href='/api/auth/logout'
+                                                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
+                                                    >
+                                                        Sign out
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href='/api/auth/login' className='hover:bg-gray-700 px-3 py-2 rounded-md'>
+                                        Login
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                        <div className='-mr-2 flex md:hidden'>
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none'
+                            >
+                                <svg className='h-6 w-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                    {isOpen ? (
+                                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M6 18L18 6M6 6l12 12' />
+                                    ) : (
+                                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M4 6h16M4 12h16m-7 6h7' />
+                                    )}
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </nav>
+
+                {isOpen && (
+                    <div className='md:hidden'>
+                        {user ? (
+                            <>
+                                <Link href='/dashboard' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Dashboard
+                                </Link>
+                                <Link href='/option2' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Settings
+                                </Link>
+                                <Link href='/auctions' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Auctions
+                                </Link>
+                                <Link href='/profile' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Profile
+                                </Link>
+                                <Link href='/api/auth/logout' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Sign out
+                                </Link>
+                                {/* <button
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className='block w-full text-left px-4 py-2 text-sm hover:bg-gray-700'
+                                >
+                                    Profile
+                                </button> */}
+                                {isDropdownOpen && (
+                                    <div className='bg-gray-800'>
+                                        <Link href='/dashboard' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                            Dashboard
+                                        </Link>
+                                        <Link href='/option2' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                            Settings
+                                        </Link>
+                                        <Link href='/auctions' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                            Auctions
+                                        </Link>
+                                        <Link href='/profile' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                            Profile
+                                        </Link>
+                                        <Link href='/api/auth/logout' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                            Sign out
+                                        </Link>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                <Link href='/api/auth/login' className='block px-4 py-2 text-sm hover:bg-gray-700'>
+                                    Login
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                )}
+            </nav>
+        </>
     );
 };
 

@@ -19,6 +19,6 @@
         "typeRoots": ["node_modules/@types"],
         "types": ["node"]
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "global.d.ts", "utils/**/*", "pages/**/*"],
     "exclude": ["node_modules"]
 }

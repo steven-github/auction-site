@@ -1,112 +1,107 @@
-// MongoDB Playground
-// This script sets up the database, creates collections, inserts sample data, and demonstrates basic queries.
-
-// Switch to the target database (create if it doesn't exist)
+// Connect to MongoDB
 use("auction_db");
 
-// Drop the database if you want to reset it (use carefully in production)
-// db.dropDatabase();
+// Clear existing data (optional for resetting)
+db.users.drop();
+db.auctions.drop();
+db.bids.drop();
+db.notifications.drop();
+db.categories.drop();
 
-// 1. Create Collections
-// Collections will be created automatically when documents are inserted, but here we explicitly create them.
-db.createCollection("users");
-db.createCollection("auctions");
-db.createCollection("bids");
+// Insert User
+db.users.insertOne({
+    _id: ObjectId("64a7bff2f0b3941b4b5b1234"),
+    given_name: "Steven",
+    family_name: "Sanchez Marin",
+    nickname: "stvn20",
+    name: "Steven Sanchez Marin",
+    picture: "https://lh3.googleusercontent.com/a/ACg8ocJTJShusRlc9wCE_46YcmtXlHF7eT_HBosbm0G8c1GtOIwfnVA8Ww=s96-c",
+    updated_at: new Date("2024-01-01T12:00:00Z"),
+    email: "stvn20@gmail.com",
+    email_verified: true,
+    sub: "google-oauth2|100786993613078818868", // Auth0 user ID
+    sid: "glWYTn5q9NPfKQVci9ye2h4gMAe6DEWP", // Session ID
+    created_at: new Date(),
+    updated_at: new Date(),
+});
 
-// 2. Insert Sample Data
-// Insert users
-db.users.insertMany([
-    {
-        user_id: "user1",
-        name: "John Doe",
-        email: "john.doe@example.com",
-        created_at: new Date("2024-01-01T12:00:00Z"),
-    },
-    {
-        user_id: "user2",
-        name: "Jane Smith",
-        email: "jane.smith@example.com",
-        created_at: new Date("2024-01-02T15:30:00Z"),
-    },
-]);
+// Insert Auction
+db.auctions.insertOne({
+    _id: ObjectId("64a7bff2f0b3941b4b5b5678"),
+    title: "Vintage Guitar",
+    description: "A rare vintage guitar from the 70s.",
+    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+    starting_price: 100,
+    current_price: 250,
+    start_time: new Date("2024-01-05T10:00:00Z"),
+    end_time: new Date("2024-01-10T10:00:00Z"),
+    created_by: ObjectId("64a7bff2f0b3941b4b5b1234"),
+    bids: [
+        {
+            user_id: ObjectId("64a7bff2f0b3941b4b5b1234"),
+            amount: 200,
+            timestamp: new Date("2024-01-06T12:00:00Z"),
+        },
+        {
+            user_id: ObjectId("64a7bff2f0b3941b4b5b5679"),
+            amount: 250,
+            timestamp: new Date("2024-01-06T13:00:00Z"),
+        },
+    ],
+    created_at: new Date("2024-01-01T12:00:00Z"),
+    updated_at: new Date("2024-01-06T13:00:00Z"),
+});
 
-// Insert auctions
-db.auctions.insertMany([
-    {
-        auction_id: "auction1",
-        title: "Vintage Watch",
-        description: "A beautiful vintage watch.",
-        starting_price: 100,
-        current_price: 150,
-        end_time: new Date("2024-01-15T12:00:00Z"),
-        bids: [],
-    },
-    {
-        auction_id: "auction2",
-        title: "Antique Vase",
-        description: "An antique vase from the 18th century.",
-        starting_price: 200,
-        current_price: 250,
-        end_time: new Date("2024-01-20T18:00:00Z"),
-        bids: [],
-    },
-]);
-
-// Insert bids
+// Insert Bids (if separate collection is used)
 db.bids.insertMany([
     {
-        bid_id: "bid1",
-        auction_id: "auction1",
-        user_id: "user1",
-        amount: 150,
-        timestamp: new Date("2024-01-10T14:00:00Z"),
+        _id: ObjectId("64a7bff2f0b3941b4b5b6789"),
+        auction_id: ObjectId("64a7bff2f0b3941b4b5b5678"),
+        user_id: ObjectId("64a7bff2f0b3941b4b5b1234"),
+        amount: 200,
+        timestamp: new Date("2024-01-06T12:00:00Z"),
     },
     {
-        bid_id: "bid2",
-        auction_id: "auction2",
-        user_id: "user2",
+        _id: ObjectId("64a7bff2f0b3941b4b5b6790"),
+        auction_id: ObjectId("64a7bff2f0b3941b4b5b5678"),
+        user_id: ObjectId("64a7bff2f0b3941b4b5b5679"),
         amount: 250,
-        timestamp: new Date("2024-01-11T10:30:00Z"),
+        timestamp: new Date("2024-01-06T13:00:00Z"),
     },
 ]);
 
-// 3. Queries
-// Query all users
-console.log("All Users:");
-db.users.find({}).forEach((user) => {
-    printjson(user);
+// Insert Notifications
+db.notifications.insertOne({
+    _id: ObjectId("64a7bff2f0b3941b4b5b7890"),
+    user_id: ObjectId("64a7bff2f0b3941b4b5b1234"),
+    auction_id: ObjectId("64a7bff2f0b3941b4b5b5678"),
+    message: "You have been outbid on Vintage Guitar!",
+    type: "outbid",
+    is_read: false,
+    timestamp: new Date("2024-01-06T13:05:00Z"),
 });
 
-// Query all auctions
-console.log("\nAll Auctions:");
-db.auctions.find({}).forEach((auction) => {
-    printjson(auction);
+// Insert Categories
+db.categories.insertOne({
+    _id: ObjectId("64a7bff2f0b3941b4b5b8901"),
+    name: "Electronics",
+    description: "Devices and gadgets",
+    created_at: new Date(),
+    updated_at: new Date(),
 });
 
-// Query all bids for a specific auction
-const auctionId = "auction1";
-console.log(`\nBids for Auction ID: ${auctionId}`);
-db.bids.find({ auction_id: auctionId }).forEach((bid) => {
-    printjson(bid);
-});
+// Verify inserted data
+print("Users:");
+printjson(db.users.find().toArray());
 
-// 4. Update Data
-// Add a bid to the auction document (for real-time updates in the auction)
-const newBid = {
-    user_id: "user1",
-    amount: 160,
-    timestamp: new Date("2024-01-11T14:00:00Z"),
-};
+print("\nAuctions:");
+printjson(db.auctions.find().toArray());
 
-db.auctions.updateOne({ auction_id: "auction1" }, { $push: { bids: newBid }, $set: { current_price: 160 } });
+print("\nBids:");
+printjson(db.bids.find().toArray());
 
-console.log("\nUpdated Auction:");
-printjson(db.auctions.findOne({ auction_id: "auction1" }));
+print("\nNotifications:");
+printjson(db.notifications.find().toArray());
 
-// 5. Delete Data (Optional)
-// Delete all bids for a specific auction
-db.bids.deleteMany({ auction_id: "auction1" });
-console.log("\nBids after deletion for Auction ID: auction1");
-db.bids.find({ auction_id: "auction1" }).forEach((bid) => {
-    printjson(bid);
-});
+print("\nCategories:");
+printjson(db.categories.find().toArray());
