@@ -1,8 +1,11 @@
+import { faBars, faCoffee, faGrip, faListUl } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 import AuctionCard from "@/components/AuctionCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import axios from "axios";
+import { faList } from "@fortawesome/free-solid-svg-icons/faList";
 
 export default function AuctionsList() {
     const [auctions, setAuctions] = useState([]);
@@ -49,19 +52,26 @@ export default function AuctionsList() {
         <div className='max-w-7xl mx-auto p-6'>
             <div className='flex justify-between items-center mb-6'>
                 <h1 className='text-3xl font-bold text-gray-800'>Auctions</h1>
+
                 <div className='flex items-center space-x-4'>
-                    <button
-                        className={`py-2 px-4 rounded-md ${viewMode === "grid" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-                        onClick={() => setViewMode("grid")}
-                    >
-                        Grid
-                    </button>
-                    <button
-                        className={`py-2 px-4 rounded-md ${viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-                        onClick={() => setViewMode("list")}
-                    >
-                        List
-                    </button>
+                    <div className='inline-flex rounded-md shadow-sm' role='group'>
+                        <button
+                            type='button'
+                            className='inline-flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 '
+                            onClick={() => setViewMode("grid")}
+                        >
+                            <FontAwesomeIcon icon={faGrip} size='sm' />
+                            Grid
+                        </button>
+                        <button
+                            type='button'
+                            className='inline-flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 '
+                            onClick={() => setViewMode("list")}
+                        >
+                            <FontAwesomeIcon icon={faBars} size='sm' />
+                            List
+                        </button>
+                    </div>
                     <Link href='/auctions/new'>
                         <button className='bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400'>
                             Create Auction

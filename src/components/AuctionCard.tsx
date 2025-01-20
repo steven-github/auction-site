@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function AuctionCard({ auction, onDelete, viewMode }) {
+export default function AuctionCard({ auction, onDelete, viewMode }: any) {
+    // Function to format price to Costa Rican colones
+    const formatToCRC = (amount: number) =>
+        new Intl.NumberFormat("es-CR", {
+            style: "currency",
+            currency: "CRC",
+        }).format(amount);
+
     return (
         <div
             className={
@@ -16,7 +23,7 @@ export default function AuctionCard({ auction, onDelete, viewMode }) {
                     <Image
                         src={auction.images[0]}
                         alt={auction.title}
-                        className={viewMode === "grid" ? "w-full h-48 object-cover" : "w-full h-full object-cover"}
+                        className={`w-full max-h-[265px] object-cover p-4 ${viewMode === "grid" ? "h-48" : "h-full"}`}
                         width={185}
                         height={185}
                     />
@@ -36,9 +43,9 @@ export default function AuctionCard({ auction, onDelete, viewMode }) {
             {/* Content */}
             <div className={viewMode === "list" ? "w-2/3 p-4 flex flex-col justify-between" : "p-4"}>
                 <h2 className={(viewMode === "list" ? "line-clamp-2" : " line-clamp-5") + " text-xl font-semibold text-gray-800"}>{auction.title}</h2>
-                <p className='text-gray-600 mt-2'>{auction.description}</p>
-                <div className='mt-4 flex justify-between items-center'>
-                    <p className='text-gray-800 font-bold'>${auction.current_price}</p>
+                <p className='text-gray-600 mt-2 line-clamp-3'>{auction.description}</p>
+                <div className={`mt-4 flex justify-between ${viewMode === "grid" ? "flex-col items-end" : "flex-row items-center"}`}>
+                    <p className='text-gray-800 font-bold'>{formatToCRC(auction.current_price)}</p>
                     <p className='text-sm text-gray-500'>Ends: {new Date(auction.end_time).toLocaleString()}</p>
                 </div>
                 <div className={viewMode === "list" ? "mt-4 flex justify-end gap-2" : "flex justify-between gap-2 items-center mt-4 border-t pt-2"}>
