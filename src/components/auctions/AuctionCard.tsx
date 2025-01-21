@@ -10,7 +10,7 @@ interface AuctionCardProps {
 
 const AuctionCard: React.FC<AuctionCardProps> = ({ title, description, currentBid, endTime, onClick }) => {
     return (
-        <div className='border rounded-lg p-4 shadow-md hover:shadow-lg cursor-pointer' onClick={onClick}>
+        <div className='p-4 border rounded-lg shadow-md cursor-pointer hover:shadow-lg' onClick={onClick}>
             <h2 className='text-lg font-bold'>{title}</h2>
             <p className='text-sm text-gray-600'>{description}</p>
             <p className='mt-2'>

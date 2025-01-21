@@ -24,11 +24,11 @@ const BidForm: React.FC<BidFormProps> = ({ currentBid, onSubmit }) => {
                     type='number'
                     value={bidAmount}
                     onChange={(e) => setBidAmount(parseFloat(e.target.value))}
-                    className='border rounded-lg p-2 w-full'
+                    className='w-full p-2 border rounded-lg'
                     min={currentBid + 1}
                     step={1}
                 />
-                <button type='submit' className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>
+                <button type='submit' className='px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600'>
                     Place Bid
                 </button>
             </div>

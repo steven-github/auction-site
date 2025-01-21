@@ -11,7 +11,7 @@ const Dashboard: React.FC = () => {
     if (!user) {
         return (
             <div className='flex flex-col items-center justify-center h-100'>
-                <h1 className='text-2xl font-bold mb-4'>Access Denied</h1>
+                <h1 className='mb-4 text-2xl font-bold'>Access Denied</h1>
                 <p className='text-lg'>You need to log in to access this page.</p>
             </div>
         );
@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className='flex flex-col items-center justify-center h-100'>
-            <h1 className='text-2xl font-bold mb-4'>Welcome, {user?.name}!</h1>
+            <h1 className='mb-4 text-2xl font-bold'>Welcome, {user?.name}!</h1>
             <p className='text-lg'>Email: {user?.email}</p>
         </div>
     );

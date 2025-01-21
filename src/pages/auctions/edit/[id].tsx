@@ -104,23 +104,23 @@ export default function EditAuction() {
 
     if (fetching) {
         return (
-            <div className='flex justify-center items-center min-h-screen'>
-                <div className='w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin'></div>
+            <div className='flex items-center justify-center min-h-screen'>
+                <div className='w-16 h-16 border-4 border-blue-500 rounded-full border-t-transparent animate-spin'></div>
             </div>
         );
     }
 
     return (
-        <div className='max-w-4xl mx-auto p-6 bg-gray-100 min-h-screen'>
+        <div className='max-w-4xl min-h-screen p-6 mx-auto bg-gray-100'>
             <button
                 type='button'
                 onClick={() => router.push("/auctions")}
-                className='bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400'
+                className='px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400'
             >
                 Back to Auctions
             </button>
-            <form onSubmit={handleSubmit} className='bg-white p-6 rounded-lg shadow-md mt-6'>
-                <h1 className='text-2xl font-bold mb-6 text-center text-gray-800'>Edit Auction</h1>
+            <form onSubmit={handleSubmit} className='p-6 mt-6 bg-white rounded-lg shadow-md'>
+                <h1 className='mb-6 text-2xl font-bold text-center text-gray-800'>Edit Auction</h1>
 
                 <div className='mb-4'>
                     <label htmlFor='title' className='block text-sm font-medium text-gray-700'>
@@ -134,7 +134,7 @@ export default function EditAuction() {
                         value={formData.title}
                         onChange={handleInputChange}
                         required
-                        className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
+                        className='block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
                     />
                 </div>
 
@@ -149,7 +149,7 @@ export default function EditAuction() {
                         value={formData.description}
                         onChange={handleInputChange}
                         required
-                        className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
+                        className='block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
                     ></textarea>
                 </div>
 
@@ -165,7 +165,7 @@ export default function EditAuction() {
                         value={formData.starting_price}
                         onChange={handleInputChange}
                         required
-                        className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
+                        className='block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
                     />
                 </div>
 
@@ -181,7 +181,7 @@ export default function EditAuction() {
                         value={formData.current_price}
                         onChange={handleInputChange}
                         required
-                        className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
+                        className='block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
                     />
                 </div>
 
@@ -196,16 +196,16 @@ export default function EditAuction() {
                         accept='image/*'
                         multiple
                         onChange={handleImageChange}
-                        className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
+                        className='block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
                     />
-                    <div className='mt-4 flex gap-2 flex-wrap'>
+                    <div className='flex flex-wrap mt-4 gap-2'>
                         {imagePreviews.map((src, index) => (
                             <div key={index} className='relative'>
-                                <Image src={src} alt={`Preview ${index}`} className='w-24 h-24 object-cover rounded-md shadow-md' width={100} height={100} />
+                                <Image src={src} alt={`Preview ${index}`} className='object-cover w-24 h-24 shadow-md rounded-md' width={100} height={100} />
                                 <button
                                     type='button'
                                     onClick={() => handleImageDelete(index)}
-                                    className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md'
+                                    className='absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white bg-red-500 rounded-full shadow-md'
                                 >
                                     &times;
                                 </button>
@@ -217,7 +217,7 @@ export default function EditAuction() {
                 <div className='flex justify-center'>
                     <button
                         type='submit'
-                        className='bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                        className='px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400'
                         disabled={loading}
                     >
                         {loading ? "Saving..." : "Update Auction"}

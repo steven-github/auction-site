@@ -20,7 +20,7 @@ export default function Document() {
                 {/* Tailwind CSS (if additional customization is needed for fonts or styles) */}
                 {/* Additional meta tags for SEO */}
             </Head>
-            <body className='bg-gray-50 text-gray-800'>
+            <body className='text-gray-800 bg-gray-50'>
                 {/* Main application entry point */}
                 <Main />
                 <NextScript />

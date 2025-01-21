@@ -40,11 +40,11 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className='bg-gray-800 text-white'>
-                <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                    <div className='flex justify-between items-center h-16'>
+            <nav className='text-white bg-gray-800'>
+                <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
+                    <div className='flex items-center justify-between h-16'>
                         <div className='flex items-center'>
-                            <Link href='/' className=' text-xl font-bold'>
+                            <Link href='/' className='text-xl font-bold '>
                                 AuctionSite
                             </Link>
                         </div>
@@ -54,7 +54,7 @@ const Navbar = () => {
                                     <div className='relative'>
                                         <button
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                            className='hover:bg-gray-700 px-3 py-2 rounded-md flex items-center space-x-3'
+                                            className='flex items-center px-3 py-2 hover:bg-gray-700 rounded-md space-x-3'
                                         >
                                             <Image
                                                 src={user.picture ? user.picture : "https://via.placeholder.com/150"}
@@ -74,7 +74,7 @@ const Navbar = () => {
                                             </svg>
                                         </button>
                                         {isDropdownOpen && (
-                                            <div className='absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-10 divide-y divide-gray-100  dark:bg-gray-700 dark:divide-gray-600'>
+                                            <div className='absolute right-0 z-10 w-48 mt-2 text-black bg-white shadow-lg rounded-md divide-y divide-gray-100  dark:bg-gray-700 dark:divide-gray-600'>
                                                 <div className='px-4 py-3 text-sm text-gray-900 dark:text-white'>
                                                     <div>{user.name}</div>
                                                     <div className='font-medium truncate'>{user.email}</div>
@@ -127,18 +127,18 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Link href='/api/auth/login' className='hover:bg-gray-700 px-3 py-2 rounded-md'>
+                                    <Link href='/api/auth/login' className='px-3 py-2 hover:bg-gray-700 rounded-md'>
                                         Login
                                     </Link>
                                 </>
                             )}
                         </div>
-                        <div className='-mr-2 flex md:hidden'>
+                        <div className='flex -mr-2 md:hidden'>
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none'
+                                className='inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none'
                             >
-                                <svg className='h-6 w-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                <svg className='w-6 h-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                                     {isOpen ? (
                                         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M6 18L18 6M6 6l12 12' />
                                     ) : (
@@ -171,7 +171,7 @@ const Navbar = () => {
                                 </Link>
                                 {/* <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className='block w-full text-left px-4 py-2 text-sm hover:bg-gray-700'
+                                    className='block w-full px-4 py-2 text-sm text-left hover:bg-gray-700'
                                 >
                                     Profile
                                 </button> */}

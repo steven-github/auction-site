@@ -11,11 +11,7 @@ export default function AuctionCard({ auction, onDelete, viewMode }: any) {
 
     return (
         <div
-            className={
-                viewMode === "grid"
-                    ? "block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                    : "flex bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
-            }
+            className={`bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 ${viewMode === "grid" ? "block" : "flex"}`}
         >
             {/* Image */}
             <div className={viewMode === "list" ? "w-1/3" : ""}>
@@ -28,13 +24,7 @@ export default function AuctionCard({ auction, onDelete, viewMode }: any) {
                         height={185}
                     />
                 ) : (
-                    <div
-                        className={
-                            viewMode === "grid"
-                                ? "w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500"
-                                : "w-full h-full bg-gray-200 flex items-center justify-center text-gray-500"
-                        }
-                    >
+                    <div className={`w-full bg-gray-200 flex items-center justify-center text-gray-500 ${viewMode === "grid" ? "h-48" : "h-full"}`}>
                         No Image
                     </div>
                 )}
@@ -43,9 +33,9 @@ export default function AuctionCard({ auction, onDelete, viewMode }: any) {
             {/* Content */}
             <div className={viewMode === "list" ? "w-2/3 p-4 flex flex-col justify-between" : "p-4"}>
                 <h2 className={(viewMode === "list" ? "line-clamp-2" : " line-clamp-5") + " text-xl font-semibold text-gray-800"}>{auction.title}</h2>
-                <p className='text-gray-600 mt-2 line-clamp-3'>{auction.description}</p>
+                <p className='mt-2 text-gray-600 line-clamp-3'>{auction.description}</p>
                 <div className={`mt-4 flex justify-between ${viewMode === "grid" ? "flex-col items-end" : "flex-row items-center"}`}>
-                    <p className='text-gray-800 font-bold'>{formatToCRC(auction.current_price)}</p>
+                    <p className='font-bold text-gray-800'>{formatToCRC(auction.current_price)}</p>
                     <p className='text-sm text-gray-500'>Ends: {new Date(auction.end_time).toLocaleString()}</p>
                 </div>
                 <div className={viewMode === "list" ? "mt-4 flex justify-end gap-2" : "flex justify-between gap-2 items-center mt-4 border-t pt-2"}>
