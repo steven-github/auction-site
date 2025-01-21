@@ -23,9 +23,10 @@ export default function CreateAuction() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userName = localStorage.getItem("userName");
-      if (userName) {
-        setFormData((prev) => ({ ...prev, created_by: userName }));
+      const userEmail = localStorage.getItem("userEmail");
+      debugger;
+      if (userEmail) {
+        setFormData((prev) => ({ ...prev, created_by: userEmail }));
       }
     }
   }, []);

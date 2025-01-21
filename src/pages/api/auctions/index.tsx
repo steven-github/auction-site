@@ -15,7 +15,12 @@ export default async function handler(req, res) {
     switch (req.method) {
         case "GET": // Get all auctions
             try {
-                const auctions = await collection.find({}).toArray();
+                const { email } = req.query; // Extract email from query parameters
+
+                // Build the filter condition
+                const filter = email ? { email } : {};
+
+                const auctions = await collection.find(filter).toArray();
                 return res.status(200).json(auctions);
             } catch (error) {
                 console.error("Error fetching auctions:", error);

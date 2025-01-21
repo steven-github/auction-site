@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function AuctionCard({ auction, onDelete, viewMode }: any) {
+    const { user, error, isLoading } = useUser();
+
     // Function to format price to Costa Rican colones
     const formatToCRC = (amount: number) =>
         new Intl.NumberFormat("es-CR", {
@@ -38,24 +41,26 @@ export default function AuctionCard({ auction, onDelete, viewMode }: any) {
                     <p className='font-bold text-gray-800'>{formatToCRC(auction.current_price)}</p>
                     <p className='text-sm text-gray-500'>Ends: {new Date(auction.end_time).toLocaleString()}</p>
                 </div>
-                <div className={viewMode === "list" ? "mt-4 flex justify-end gap-2" : "flex justify-between gap-2 items-center mt-4 border-t pt-2"}>
-                    <Link href={`/auctions/${auction._id}`}>
-                        <button className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'>
-                            View
+                {user && (
+                    <div className={viewMode === "list" ? "mt-4 flex justify-end gap-2" : "flex justify-between gap-2 items-center mt-4 border-t pt-2"}>
+                        <Link href={`/auctions/${auction._id}`}>
+                            <button className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'>
+                                View
+                            </button>
+                        </Link>
+                        <Link href={`/auctions/edit/${auction._id}`}>
+                            <button className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'>
+                                Edit
+                            </button>
+                        </Link>
+                        <button
+                            onClick={() => onDelete(auction._id)}
+                            className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'
+                        >
+                            Delete
                         </button>
-                    </Link>
-                    <Link href={`/auctions/edit/${auction._id}`}>
-                        <button className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'>
-                            Edit
-                        </button>
-                    </Link>
-                    <button
-                        onClick={() => onDelete(auction._id)}
-                        className='py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all'
-                    >
-                        Delete
-                    </button>
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );

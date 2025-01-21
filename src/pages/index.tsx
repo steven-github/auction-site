@@ -1,3 +1,4 @@
+import AuctionsList from "./auctions";
 // pages/index.tsx
 import React from "react";
 import { useRouter } from "next/router";
@@ -16,8 +17,7 @@ const Home: React.FC = () => {
 
     return (
         <div className='flex flex-col items-center justify-center h-100'>
-            <h1 className='mb-4 text-2xl font-bold'>Welcome to the AuctionSite!</h1>
-            <p className='text-lg'>Please log in to access your dashboard.</p>
+            <AuctionsList />
         </div>
     );
 };

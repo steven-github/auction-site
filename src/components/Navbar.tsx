@@ -11,9 +11,11 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null); // Reference to the dropdown
+    const hasSavedUser = useRef(false); // Track if saveUserToDB has been called
 
     useEffect(() => {
         const saveUserToDB = async () => {
+            console.log("Saving user to DB:", user);
             try {
                 const response = await axios.post("/api/saveUser", user);
 
@@ -21,16 +23,20 @@ const Navbar = () => {
                     console.log("User saved to DB:", response.data.user);
                     localStorage.setItem("userId", response.data.user._id);
                     localStorage.setItem("userName", response.data.user.name);
+                    localStorage.setItem("userEmail", response.data.user.email);
                 }
             } catch (error: any) {
                 console.error("Error saving user:", error.response?.data || error.message);
                 localStorage.removeItem("userId");
             }
         };
+
         // Dynamically import Flowbite for interactive components
-        import("flowbite");
-        if (!isLoading) {
-            // console.log("Authenticated user:", user);
+        // import("flowbite");
+
+        // Ensure the function is only called once
+        if (!isLoading && user && !hasSavedUser.current) {
+            hasSavedUser.current = true; // Set the flag to prevent re-execution
             saveUserToDB();
         }
     }, [isLoading, user]);
