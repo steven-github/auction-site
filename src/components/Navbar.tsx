@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { sign } from "crypto";
+import router from "next/router";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Navbar = () => {
     const { user, error, isLoading } = useUser();
     const [isOpen, setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null); // Reference to the dropdown
 
     useEffect(() => {
         const saveUserToDB = async () => {
@@ -34,13 +35,37 @@ const Navbar = () => {
         }
     }, [isLoading, user]);
 
+    useEffect(() => {
+        const handleRouteChange = () => {
+            setIsDropdownOpen(false); // Close dropdown on route change
+        };
+
+        router.events.on("routeChangeStart", handleRouteChange);
+        return () => {
+            router.events.off("routeChangeStart", handleRouteChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false); // Close dropdown if clicked outside
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     return (
         <>
-            <nav className='text-white bg-gray-800'>
+            <nav className='text-white bg-gray-800 '>
                 <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
                     <div className='flex items-center justify-between h-16'>
                         <div className='flex items-center'>
@@ -48,13 +73,13 @@ const Navbar = () => {
                                 AuctionSite
                             </Link>
                         </div>
-                        <div className='hidden md:flex space-x-4'>
+                        <div className='hidden space-x-4 md:flex'>
                             {user ? (
                                 <>
-                                    <div className='relative'>
+                                    <div className='relative' ref={dropdownRef}>
                                         <button
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                            className='flex items-center px-3 py-2 hover:bg-gray-700 rounded-md space-x-3'
+                                            className='flex items-center px-3 py-2 space-x-3 rounded-md hover:bg-gray-700'
                                         >
                                             <Image
                                                 src={user.picture ? user.picture : "https://via.placeholder.com/150"}
@@ -74,7 +99,7 @@ const Navbar = () => {
                                             </svg>
                                         </button>
                                         {isDropdownOpen && (
-                                            <div className='absolute right-0 z-10 w-48 mt-2 text-black bg-white shadow-lg rounded-md divide-y divide-gray-100  dark:bg-gray-700 dark:divide-gray-600'>
+                                            <div className='absolute right-0 z-10 w-48 mt-2 text-black bg-white divide-y divide-gray-100 rounded-md shadow-lg dark:bg-gray-700 dark:divide-gray-600'>
                                                 <div className='px-4 py-3 text-sm text-gray-900 dark:text-white'>
                                                     <div>{user.name}</div>
                                                     <div className='font-medium truncate'>{user.email}</div>
@@ -83,7 +108,9 @@ const Navbar = () => {
                                                     <li>
                                                         <Link
                                                             href='/dashboard'
-                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                            className={`block px-4 py-2 hover:bg-gray-100 ${
+                                                                router.pathname === "/dashboard" ? "bg-gray-100" : ""
+                                                            }`}
                                                         >
                                                             Dashboard
                                                         </Link>
@@ -91,7 +118,7 @@ const Navbar = () => {
                                                     <li>
                                                         <Link
                                                             href='#'
-                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                            className={`block px-4 py-2 hover:bg-gray-100 ${router.pathname === "#" ? "bg-gray-100" : ""}`}
                                                         >
                                                             Settings
                                                         </Link>
@@ -99,7 +126,9 @@ const Navbar = () => {
                                                     <li>
                                                         <Link
                                                             href='/auctions'
-                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                            className={`block px-4 py-2 hover:bg-gray-100 ${
+                                                                router.pathname === "/auctions" ? "bg-gray-100" : ""
+                                                            }`}
                                                         >
                                                             Auctions
                                                         </Link>
@@ -107,17 +136,16 @@ const Navbar = () => {
                                                     <li>
                                                         <Link
                                                             href='/profile'
-                                                            className='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+                                                            className={`block px-4 py-2 hover:bg-gray-100 ${
+                                                                router.pathname === "/profile" ? "bg-gray-100" : ""
+                                                            }`}
                                                         >
                                                             Profile
                                                         </Link>
                                                     </li>
                                                 </ul>
                                                 <div className='py-2'>
-                                                    <Link
-                                                        href='/api/auth/logout'
-                                                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
-                                                    >
+                                                    <Link href='/api/auth/logout' className='block px-4 py-2 text-sm text-gray-700 hover:text-blue-500'>
                                                         Sign out
                                                     </Link>
                                                 </div>
@@ -127,7 +155,7 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Link href='/api/auth/login' className='px-3 py-2 hover:bg-gray-700 rounded-md'>
+                                    <Link href='/api/auth/login' className='px-3 py-2 rounded-md hover:bg-gray-700'>
                                         Login
                                     </Link>
                                 </>
