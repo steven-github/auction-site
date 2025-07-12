@@ -34,7 +34,6 @@ const AuctionDetail = () => {
 
   const [auction, setAuction] = useState<Auction | null>(null);
   const [loading, setLoading] = useState(true);
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("es-CR", {
@@ -81,8 +80,6 @@ const AuctionDetail = () => {
     );
   }
 
-  const images = auction.images.map((img) => ({ src: img }));
-
   return (
     <div className="mx-auto mt-8 max-w-4xl p-6">
       <button
@@ -106,33 +103,26 @@ const AuctionDetail = () => {
         <div className="flex flex-wrap gap-4">
           {auction.images?.length > 0 ? (
             auction.images.map((image, index) => (
-              <button
+              <Image
                 key={index}
-                type="button"
-                onClick={() => setLightboxIndex(index)}
-                className="focus:outline-none"
-              >
-                <Image
-                  src={image}
-                  alt={`Auction Image ${index + 1}`}
-                  width={200}
-                  height={200}
-                  className="rounded-md object-cover shadow-md transition hover:opacity-90"
-                />
-              </button>
+                src={image}
+                alt={`Auction Image ${index + 1}`}
+                width={200}
+                height={200}
+                className="rounded-md object-cover shadow-md"
+              />
             ))
           ) : (
             <p className="text-gray-500">No images available.</p>
           )}
         </div>
+        <Lightbox
+          open={lightboxIndex !== null}
+          close={() => setLightboxIndex(null)}
+          index={lightboxIndex ?? 0}
+          slides={images}
+        />
       </div>
-
-      <Lightbox
-        open={lightboxIndex !== null}
-        close={() => setLightboxIndex(null)}
-        index={lightboxIndex ?? 0}
-        slides={images}
-      />
 
       <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
