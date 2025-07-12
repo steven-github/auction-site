@@ -18,7 +18,7 @@ export default async function handler(req, res) {
                 const { email } = req.query; // Extract email from query parameters
 
                 // Build the filter condition
-                const filter = email ? { email } : {};
+                const filter = email ? { created_by: email } : {};
 
                 const auctions = await collection.find(filter).toArray();
                 return res.status(200).json(auctions);

@@ -7,59 +7,91 @@ import Link from "next/link";
 import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
+type Auction = {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  startingPrice: number;
+  endTime: string;
+  createdAt: string;
+  owner: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  bids: {
+    _id: string;
+    amount: number;
+    bidder: {
+      _id: string;
+      name: string;
+      email: string;
+    };
+    createdAt: string;
+  };
+};
+
 export default function AuctionsList() {
-  const { user, error, isLoading } = useUser();
-  const [auctions, setAuctions] = useState([]);
+  const { user, isLoading: authLoading } = useUser();
+  const [auctions, setAuctions] = useState<Auction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  // Load saved view mode from localStorage
   useEffect(() => {
-    if (user) {
-      console.log("Authenticated user:", user.email);
+    const savedMode = localStorage.getItem("viewMode");
+    if (savedMode === "list" || savedMode === "grid") {
+      setViewMode(savedMode);
     }
+  }, []);
 
-    if (localStorage.getItem("viewMode")) {
-      setViewMode(localStorage.getItem("viewMode") || "grid");
-    }
+  // Fetch auctions when user is available
+  useEffect(() => {
+    if (authLoading) return;
 
-    axios
-      .get("/api/auctions", {
-        params: { email: user ? user.email : "" },
-      })
-      .then((response) => {
+    const fetchAuctions = async () => {
+      try {
+        const response = await axios.get("/api/auctions", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+            "If-None-Match": "",
+          },
+        });
         setAuctions(response.data);
+      } catch (err) {
+        console.error("Error fetching auctions:", err);
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching auctions:", error);
-        setLoading(false);
-      });
-  }, [user]);
+      }
+    };
+
+    fetchAuctions();
+  }, [authLoading]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this auction?")) {
-      return;
-    }
+    if (!confirm("Are you sure you want to delete this auction?")) return;
 
     try {
       await axios.delete(`/api/auctions/${id}`);
-      setAuctions((prev) => prev.filter((auction) => auction._id !== id));
+      setAuctions((prev) => prev.filter((a) => a._id !== id));
       alert("Auction deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting auction:", error);
+    } catch (err) {
+      console.error("Error deleting auction:", err);
       alert("Failed to delete auction.");
     }
   };
 
-  const handleViewModeChange = (mode: string) => {
-    localStorage.setItem("viewMode", mode);
+  const handleViewModeChange = (mode: "grid" | "list") => {
     setViewMode(mode);
+    localStorage.setItem("viewMode", mode);
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
-      <div className="flex items-center justify-center">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
@@ -68,39 +100,34 @@ export default function AuctionsList() {
     <div className="mx-auto w-full max-w-7xl p-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-800">Auctions</h1>
-
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {auctions.length > 0 && (
             <div className="inline-flex rounded-md shadow-sm" role="group">
-              <button
-                type="button"
-                className={`inline-flex items-center gap-2 rounded-s-lg border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-blue-700 focus:z-10 ${
-                  viewMode === "grid"
-                    ? "bg-gray-100 text-blue-700"
-                    : "bg-white text-gray-900"
-                }`}
-                onClick={() => handleViewModeChange("grid")}
-              >
-                <FontAwesomeIcon icon={faGrip} size="sm" />
-                Grid
-              </button>
-              <button
-                type="button"
-                className={`inline-flex items-center gap-2 rounded-e-lg border-b border-r border-t border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-blue-700 focus:z-10 ${
-                  viewMode === "list"
-                    ? "bg-gray-100 text-blue-700"
-                    : "bg-white text-gray-900"
-                }`}
-                onClick={() => handleViewModeChange("list")}
-              >
-                <FontAwesomeIcon icon={faBars} size="sm" />
-                List
-              </button>
+              {["grid", "list"].map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  className={`inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium ${
+                    mode === "grid" ? "rounded-s-lg" : "rounded-e-lg border-l-0"
+                  } ${
+                    viewMode === mode
+                      ? "bg-gray-100 text-blue-700"
+                      : "bg-white text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                  } border-gray-200 focus:z-10`}
+                  onClick={() => handleViewModeChange(mode as "grid" | "list")}
+                >
+                  <FontAwesomeIcon
+                    icon={mode === "grid" ? faGrip : faBars}
+                    size="sm"
+                  />
+                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </button>
+              ))}
             </div>
           )}
           {user && (
             <Link href="/auctions/new">
-              <button className="mb-2 me-2 rounded-full bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
+              <button className="rounded-full bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
                 Create Auction
               </button>
             </Link>

@@ -24,7 +24,6 @@ export default function CreateAuction() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userEmail = localStorage.getItem("userEmail");
-      debugger;
       if (userEmail) {
         setFormData((prev) => ({ ...prev, created_by: userEmail }));
       }

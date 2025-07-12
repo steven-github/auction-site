@@ -141,6 +141,16 @@ const Navbar = () => {
                                                     </li>
                                                     <li>
                                                         <Link
+                                                            href='/auctions/mine'
+                                                            className={`block px-4 py-2 hover:bg-gray-100 ${
+                                                                router.pathname === "/auctions/mine" ? "bg-gray-100" : ""
+                                                            }`}
+                                                        >
+                                                            My Auctions
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
                                                             href='/profile'
                                                             className={`block px-4 py-2 hover:bg-gray-100 ${
                                                                 router.pathname === "/profile" ? "bg-gray-100" : ""
