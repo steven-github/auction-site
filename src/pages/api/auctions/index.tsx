@@ -1,13 +1,5 @@
 import { connectToDatabase } from "@/utils/mongodb";
 
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: "10mb", // Increase payload size limit to 10 MB
-        },
-    },
-};
-
 export default async function handler(req, res) {
     const { db } = await connectToDatabase();
     const collection = db.collection("auctions");
@@ -52,3 +44,11 @@ export default async function handler(req, res) {
             return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: "10mb", // Increase payload size limit to 10 MB
+        },
+    },
+};
